@@ -1,0 +1,103 @@
+import json
+
+
+
+
+##########################################################################
+###This section moves a dictionary into json and then back out of json ###
+##########################################################################
+
+# declare a normal dictionary
+thisdict = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+#print attributes of normal dictionary
+print()
+print("Key access from the original dictionary:",thisdict["brand"])
+
+# convert to json style string
+dict_1 = json.dumps(thisdict)
+# print the converted string that we will send to a file
+print(dict_1)
+
+# open or make a new file called dictionary_save.json that we will referr to as thisdict_file in the code
+with open("dictionary_save.json", "w") as thisdict_file:
+    # put the json string in dict_1 in the file we just opened
+    json.dump(dict_1, thisdict_file)
+
+# open the file again, this time as read only with code alias file save
+with open('dictionary_save.json', 'r') as thisdict_save:
+  # use json.load to get the json string from
+  data = json.load(thisdict_save)
+  # we have now retrieved the string that we sent
+  print(data)
+
+  # the string is useless until we tranlate it back to a dictionary with json.loads
+  data = json.loads(data)
+  # notice the printed data is now in single quotes it has ben translated back to
+  # a dictionary object and can be manipulated again
+  print(data)
+
+
+  print("Key access from the returned dictionary:", data["brand"])
+
+print()
+print("----------------------------------------------------------------------")
+print("----------------------------------------------------------------------")
+print("----------------------------------------------------------------------")
+print()
+
+##############################################################################
+### Save class attributes to a json dictionary and then reverse the process###
+##############################################################################
+
+# start with declaring an arbirtrary class
+class Car:
+    def __init__(self, brand, name, batch):
+        self.brand = brand
+        self.name = name
+        self.batch = batch
+    def say_hi(self):
+        print("Hello")
+
+
+# create class objects and fill in attributes
+c1 = Car("Honda", "city", "2005")
+
+
+# print the c1 object attributes
+print(c1.brand, c1.name, c1.batch)
+# call a class function
+c1.say_hi()
+
+
+# use json.dumps() to create json dictionary string of the attribute
+jsonstr3 = json.dumps(c1.__dict__)
+
+# print the json dictionary strings before it is saved
+print(jsonstr3)
+
+# store the dictionary of object attributes in a file
+with open("attribute_save.json", "w") as att_file:
+    json.dump(jsonstr3, att_file)
+
+# get the dictionary of object attributes from a file
+with open('attribute_save.json', 'r') as att_file:
+  data = json.load(att_file)
+  # print the returned dictionary of attributes note that it is unchanged from the save
+  print(data)
+
+  # turn it into a dictinary
+  data = json.loads(data)
+  # print just to see that it is now a python dictionary
+  print(data)
+
+# make a new object and use the dictioanry to fill the attributes
+new_car = Car(**data)
+
+# test print objects attributes
+print(new_car.brand, new_car.name, new_car.batch)
+# methods still work
+new_car.say_hi()
